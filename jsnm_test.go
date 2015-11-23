@@ -34,22 +34,42 @@ func MoreU() {
 	u2.ToJ()
 }
 
+var (
+	jm *Jsnm
+)
+
+func init() {
+	fmt.Println("test...")
+	jm = FileNameFmt("Two.json")
+}
+
 func TestOne(t *testing.T) {
-	// MoreU()
+	jm = FileNameFmt("Two.json")
 
-	jm := FileNameFmt("Two.json")
-	fmt.Println(jm)
-	v, err := jm.Get("Friend")
-	fmt.Println(v, err)
+	cur := jm.Get("Friends")
+	fmt.Println(cur.RawData())
 
-	v, err = jm.Get("Friends", "One", "Loc")
-	fmt.Println(v, err)
+	one := cur.Get("One")
+	fmt.Println(one.RawData())
 
-	v, err = jm.Get("Friends", "One", "Name")
-	fmt.Println(v, err)
+	one_name := cur.Get("One", "Name")
+	fmt.Println(one_name.RawData())
 
-	v, err = jm.Get("Friends", "One", "Name")
-	fmt.Println(v, err)
+	one_name_X := jm.Get("Friends", "One", "Name", "X")
+	fmt.Println(one_name_X)
 
-	fmt.Println(jm)
+	xx := one_name_X.Get("XX")
+	fmt.Println(xx)
+}
+
+func BenchmarkGet(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = jm.Get("Friends", "One", "Name")
+	}
+}
+
+func BenchmarkGetShort(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = jm.Get("Friends")
+	}
 }
