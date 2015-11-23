@@ -43,9 +43,7 @@ func init() {
 	jm = FileNameFmt("Two.json")
 }
 
-func TestOne(t *testing.T) {
-	jm = FileNameFmt("Two.json")
-
+func TestGet(t *testing.T) {
 	cur := jm.Get("Friends")
 	fmt.Println(cur.RawData())
 
@@ -60,6 +58,9 @@ func TestOne(t *testing.T) {
 
 	xx := one_name_X.Get("XX")
 	fmt.Println(xx)
+
+	fon := jm.Get("Friends").Get("One").Get("Name")
+	fmt.Println(fon.RawData())
 }
 
 func BenchmarkGet(b *testing.B) {
