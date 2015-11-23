@@ -1,0 +1,22 @@
+{
+		"Name": "Two",
+		"Age": 2,
+		"Friends": {
+			"One": {
+				"Name": "One",
+				"Age": 1,
+				"Friends": {
+					"One": null
+				},
+				"Loc": [
+					"One",
+					"OneOne"
+				]
+			},
+			"Two": null
+		},
+		"Loc": [
+			"Two",
+			"TwoTwo"
+		]
+	}
