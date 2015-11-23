@@ -61,6 +61,17 @@ func TestGet(t *testing.T) {
 
 	fon := jm.Get("Friends").Get("One").Get("Name")
 	fmt.Println(fon.RawData())
+
+	i64, err := jm.Get("Age").RawData().Int64()
+	fmt.Println(i64, err)
+}
+
+func TestArr(t *testing.T) {
+	arr := jm.Get("Loc").Arr()
+	fmt.Printf("%#v\n", arr)
+	fmt.Println(arr[0].RawData())
+	name := arr[0].Get("Name")
+	fmt.Println(name)
 }
 
 func BenchmarkGet(b *testing.B) {

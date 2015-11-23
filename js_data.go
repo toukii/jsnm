@@ -22,6 +22,10 @@ func NewRawJsnm(raw interface{}) *Jsnm {
 	}
 }
 
-func (j *Jsnm) RawData() RawData {
-	return j.raw
+func (j *Jsnm) RawData() *RawData {
+	return &j.raw
+}
+
+func (j *Jsnm) MapData() MapData {
+	return j.data
 }

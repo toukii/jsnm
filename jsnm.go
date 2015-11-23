@@ -39,3 +39,22 @@ func (j *Jsnm) Get(path ...string) *Jsnm {
 	}
 	return will_cache_data.Get(path[1:]...)
 }
+
+func (j *Jsnm) Arr() []*Jsnm {
+	if j == nil {
+		return nil
+	}
+	arr, ok := (j.raw.raw).([]interface{})
+	if !ok {
+		return nil
+	}
+	ret := make([]*Jsnm, 0, len(arr))
+	for _, vry := range arr {
+		if map_data, ok := vry.(map[string]interface{}); ok {
+			ret = append(ret, NewJsnm(map_data))
+		} else {
+			ret = append(ret, NewRawJsnm(vry))
+		}
+	}
+	return ret
+}
