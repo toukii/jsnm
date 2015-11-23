@@ -62,8 +62,12 @@ func TestGet(t *testing.T) {
 	fon := jm.Get("Friends").Get("One").Get("Name")
 	fmt.Println(fon.RawData())
 
-	i64, err := jm.Get("Age").RawData().Float64()
+	i64, err := jm.Get("Age").RawData().Int64()
 	fmt.Println(i64, err)
+
+	i64 = jm.Get("Age").RawData().MustInt64()
+	fmt.Println(i64)
+
 }
 
 func TestArr(t *testing.T) {
