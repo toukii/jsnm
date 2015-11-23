@@ -62,7 +62,7 @@ func TestGet(t *testing.T) {
 	fon := jm.Get("Friends").Get("One").Get("Name")
 	fmt.Println(fon.RawData())
 
-	i64, err := jm.Get("Age").RawData().Int64()
+	i64, err := jm.Get("Age").RawData().Float64()
 	fmt.Println(i64, err)
 }
 
