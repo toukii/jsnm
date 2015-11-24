@@ -133,30 +133,6 @@ func TestArr_NCGet(t *testing.T) {
 	assert(t, arr1, "TwoTwo")
 }
 
-func BenchmarkGet(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		_ = jm.Get("Friends", "One", "Name")
-	}
-}
-
-func BenchmarkNCGet(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		_ = jm.NCGet("Friends", "One", "Name")
-	}
-}
-
-func BenchmarkGetShort(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		_ = jm.Get("Friends")
-	}
-}
-
-func BenchmarkNCGetShort(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		_ = jm.NCGet("Friends")
-	}
-}
-
 func TestArrJson(t *testing.T) {
 	us := []*User{NewU("foo", 10), NewU("bar", 12)}
 	bs, err := json.MarshalIndent(us, "\t", "\t")
@@ -180,11 +156,44 @@ func TestGsj(t *testing.T) {
 	assert(t, name, "One")
 }
 
+func BenchmarkGet(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = jm.Get("Friends", "One", "Name")
+	}
+}
+
+func BenchmarkShort_Get(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = jm.Get("Friends")
+	}
+}
+
+func BenchmarkNCGet(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = jm.NCGet("Friends", "One", "Name")
+	}
+}
+
+func BenchmarkShort_NCGet(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = jm.NCGet("Friends")
+	}
+}
+
 func BenchmarkGsj(b *testing.B) {
 	b.StopTimer()
 	js, _ := gsj.NewJson(goutils.ReadFile("test.json"))
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
 		_ = js.GetPath("Friends", "One", "Name")
+	}
+}
+
+func BenchmarkShort_Gsj(b *testing.B) {
+	b.StopTimer()
+	js, _ := gsj.NewJson(goutils.ReadFile("test.json"))
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		_ = js.GetPath("Friends")
 	}
 }
