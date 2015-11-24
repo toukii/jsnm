@@ -91,6 +91,8 @@ _Example_
 
 ```go
 jm.Get("Friends").Get("Age")
+// NCGet should be after the Get
+fon := jm.Get("Friends").NCGet("One").NCGet("Name")
 ```
 
 -------------------------------
@@ -141,8 +143,6 @@ _Example_
 
 ```go
 jm.Get("Loc").Arr[0].Get("Name")
-fon := jm.Get("Friends").NCGet("One").NCGet("Name")
-// NCGet should be after the Get
 arr1 := jm.NCGet("Loc").ArrLoc(1).RawData().String()
 ```
 
