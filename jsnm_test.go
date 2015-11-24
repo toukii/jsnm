@@ -164,4 +164,9 @@ func TestArrJson(t *testing.T) {
 	jmb := BytesFmt(bs)
 	name := jmb.ArrLoc(0).Get("Name").RawData().String()
 	assert(t, name, "foo")
+
+	ioutil.WriteFile("foo.json", bs, 0666)
+	jmf := FileNameFmt("foo.json")
+	namef := jmf.ArrLoc(0).Get("Name").RawData().String()
+	assert(t, namef, "foo")
 }
