@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/shaalx/goutils"
 	"io"
-	"io/ioutil"
 	"os"
 )
 
@@ -22,11 +21,13 @@ func BytesFmt(bs []byte) *Jsnm {
 }
 
 func ReaderFmt(r io.Reader) *Jsnm {
-	bs, err := ioutil.ReadAll(r)
+	v := NewJsnm(nil)
+	err := json.NewDecoder(r).Decode(&v.data)
 	if goutils.CheckErr(err) {
 		return nil
 	}
-	return BytesFmt(bs)
+	v.raw.raw = v.data
+	return v
 }
 
 func FileNameFmt(fn string) *Jsnm {
