@@ -6,6 +6,9 @@ import (
 	"io/ioutil"
 	"reflect"
 	"testing"
+
+	"github.com/shaalx/goutils"
+	gsj "github.com/shaalx/membership/pkg3/go-simplejson"
 )
 
 type User struct {
@@ -169,4 +172,19 @@ func TestArrJson(t *testing.T) {
 	jmf := FileNameFmt("foo.json")
 	namef := jmf.ArrLoc(0).Get("Name").RawData().String()
 	assert(t, namef, "foo")
+}
+
+func TestGsj(t *testing.T) {
+	js, _ := gsj.NewJson(goutils.ReadFile("test.json"))
+	name := js.GetPath("Friends", "One", "Name").MustString()
+	assert(t, name, "One")
+}
+
+func BenchmarkGsj(b *testing.B) {
+	b.StopTimer()
+	js, _ := gsj.NewJson(goutils.ReadFile("test.json"))
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		_ = js.GetPath("Friends", "One", "Name")
+	}
 }
