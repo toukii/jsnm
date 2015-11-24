@@ -17,6 +17,7 @@ func BytesFmt(bs []byte) *Jsnm {
 	if goutils.CheckErr(err) {
 		return nil
 	}
+	v.raw.raw = v.data
 	return v
 }
 

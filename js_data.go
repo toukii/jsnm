@@ -23,6 +23,9 @@ func NewRawJsnm(raw interface{}) *Jsnm {
 }
 
 func (j *Jsnm) RawData() *RawData {
+	if nil == j {
+		return nil
+	}
 	return &j.raw
 }
 

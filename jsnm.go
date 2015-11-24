@@ -10,7 +10,7 @@ func init() {
 
 func (j *Jsnm) Get(path ...string) *Jsnm {
 	if j == nil || len(path) <= 0 {
-		return nil
+		return j
 	}
 	// first step: get data from cache
 	if cache_data, ok := j.cache[path[0]]; ok {

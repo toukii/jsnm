@@ -14,6 +14,9 @@ func NewRawData(raw interface{}) RawData {
 }
 
 func (d *RawData) String() string {
+	if d == nil {
+		return ""
+	}
 	return fmt.Sprintf("%v", d.raw)
 }
 

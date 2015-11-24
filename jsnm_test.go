@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"reflect"
 	"testing"
 )
 
@@ -16,7 +17,7 @@ type User struct {
 
 func (u *User) ToJ() {
 	bs, _ := json.MarshalIndent(u, "\t", "\t")
-	_ = ioutil.WriteFile(u.Name+".json", bs, 0666)
+	_ = ioutil.WriteFile("test.json", bs, 0666)
 }
 
 func NewU(n string, a byte) *User {
@@ -27,7 +28,7 @@ func NewU(n string, a byte) *User {
 	return u
 }
 
-func MoreU() {
+func Mock() {
 	u1 := NewU("One", 1)
 	u2 := NewU("Two", 2)
 	u2.Friends["One"] = u1
@@ -40,42 +41,53 @@ var (
 
 func init() {
 	fmt.Println("test...")
-	jm = FileNameFmt("Two.json")
+	Mock()
+	jm = FileNameFmt("test.json")
+}
+
+func assert(t *testing.T, get, want interface{}) bool {
+	if get == nil && want == nil {
+		return true
+	}
+	if !reflect.DeepEqual(want, get) {
+		t.Errorf("want:%v, get: %v\n", want, get)
+		return false
+	}
+	return true
 }
 
 func TestGet(t *testing.T) {
 	cur := jm.Get("Friends")
-	fmt.Println(cur.RawData())
-
-	one := cur.Get("One")
-	fmt.Println(one.RawData())
 
 	one_name := cur.Get("One", "Name")
-	fmt.Println(one_name.RawData())
+	assert(t, one_name.RawData().String(), "One")
 
 	one_name_X := jm.Get("Friends", "One", "Name", "X")
-	fmt.Println(one_name_X)
+	if one_name_X != nil {
+		t.Error(one_name_X, "should be nil.")
+	}
 
 	xx := one_name_X.Get("XX")
-	fmt.Println(xx)
+	if xx != nil {
+		t.Error(xx, "should be nil.")
+	}
 
 	fon := jm.Get("Friends").Get("One").Get("Name")
-	fmt.Println(fon.RawData())
+	assert(t, fon.RawData().String(), "One")
 
-	i64, err := jm.Get("Age").RawData().Int64()
-	fmt.Println(i64, err)
+	i64, _ := jm.Get("Age").RawData().Int64()
+	assert(t, i64, int64(2))
 
 	i64 = jm.Get("Age").RawData().MustInt64()
-	fmt.Println(i64)
+	assert(t, i64, int64(2))
 
 }
 
 func TestArr(t *testing.T) {
 	arr := jm.Get("Loc").Arr()
-	fmt.Printf("%#v\n", arr)
-	fmt.Println(arr[0].RawData())
-	name := arr[0].Get("Name")
-	fmt.Println(name)
+	name := arr[0].RawData().String()
+	assert(t, name, "Two")
+	assert(t, arr[1].RawData().String(), "TwoTwo")
 }
 
 func BenchmarkGet(b *testing.B) {
