@@ -83,11 +83,51 @@ func TestGet(t *testing.T) {
 
 }
 
+func TestNCGet(t *testing.T) {
+	cur := jm.NCGet("Friends")
+
+	one_name := cur.NCGet("One", "Name")
+	assert(t, one_name.RawData().String(), "One")
+
+	one_name_X := jm.NCGet("Friends", "One", "Name", "X")
+	if one_name_X != nil {
+		t.Error(one_name_X, "should be nil.")
+	}
+
+	xx := one_name_X.NCGet("XX")
+	if xx != nil {
+		t.Error(xx, "should be nil.")
+	}
+
+	fon := jm.NCGet("Friends").NCGet("One").NCGet("Name")
+	assert(t, fon.RawData().String(), "One")
+
+	i64, _ := jm.NCGet("Age").RawData().Int64()
+	assert(t, i64, int64(2))
+
+	i64 = jm.NCGet("Age").RawData().MustInt64()
+	assert(t, i64, int64(2))
+
+}
+
 func TestArr(t *testing.T) {
 	arr := jm.Get("Loc").Arr()
 	name := arr[0].RawData().String()
 	assert(t, name, "Two")
 	assert(t, arr[1].RawData().String(), "TwoTwo")
+
+	arr1 := jm.Get("Loc").ArrLoc(1).RawData().String()
+	assert(t, arr1, "TwoTwo")
+}
+
+func TestArr_NCGet(t *testing.T) {
+	arr := jm.NCGet("Loc").Arr()
+	name := arr[0].RawData().String()
+	assert(t, name, "Two")
+	assert(t, arr[1].RawData().String(), "TwoTwo")
+
+	arr1 := jm.NCGet("Loc").ArrLoc(1).RawData().String()
+	assert(t, arr1, "TwoTwo")
 }
 
 func BenchmarkGet(b *testing.B) {
@@ -96,8 +136,20 @@ func BenchmarkGet(b *testing.B) {
 	}
 }
 
+func BenchmarkNCGet(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = jm.NCGet("Friends", "One", "Name")
+	}
+}
+
 func BenchmarkGetShort(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_ = jm.Get("Friends")
+	}
+}
+
+func BenchmarkNCGetShort(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = jm.NCGet("Friends")
 	}
 }

@@ -112,5 +112,9 @@ age := jm.Get("Friends").Get("Age").MustInt64()
 fmt.Println(age)
 ```
 
+##	Benchmark
+
+![Test](http://7xku3c.com1.z0.glb.clouddn.com/jsnm-benchmark.png)
 
  [1]: https://github.com/shaalx/jsnm "jsnm"
+
