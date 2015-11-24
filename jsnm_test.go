@@ -153,3 +153,15 @@ func BenchmarkNCGetShort(b *testing.B) {
 		_ = jm.NCGet("Friends")
 	}
 }
+
+func TestArrJson(t *testing.T) {
+	us := []*User{NewU("foo", 10), NewU("bar", 12)}
+	bs, err := json.MarshalIndent(us, "\t", "\t")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(string(bs))
+	jmb := BytesFmt(bs)
+	name := jmb.ArrLoc(0).Get("Name").RawData().String()
+	assert(t, name, "foo")
+}

@@ -12,21 +12,25 @@ func BytesFmt(bs []byte) *Jsnm {
 		return nil
 	}
 	v := NewJsnm(nil)
-	err := json.Unmarshal(bs, &v.data)
+	err := json.Unmarshal(bs, &v.raw.raw)
 	if goutils.CheckErr(err) {
 		return nil
 	}
-	v.raw.raw = v.data
+	if map_data, ok := v.raw.raw.(map[string]interface{}); ok {
+		v.data = map_data
+	}
 	return v
 }
 
 func ReaderFmt(r io.Reader) *Jsnm {
 	v := NewJsnm(nil)
-	err := json.NewDecoder(r).Decode(&v.data)
+	err := json.NewDecoder(r).Decode(&v.raw.raw)
 	if goutils.CheckErr(err) {
 		return nil
 	}
-	v.raw.raw = v.data
+	if map_data, ok := v.raw.raw.(map[string]interface{}); ok {
+		v.data = map_data
+	}
 	return v
 }
 
