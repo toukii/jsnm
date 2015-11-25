@@ -174,11 +174,11 @@ func BenchmarkArr(b *testing.B) {
 	U := []*User{NewU("O", 1), NewU("T", 2)}
 	us := []S{S{U: U}, S{U: U}}
 	bs, _ := json.MarshalIndent(us, "\t", "\t")
-	fmt.Println(string(bs))
+	// fmt.Println(string(bs))
 	jmb := BytesFmt(bs)
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		_ = jmb.Arr()[0].Get("U").Arr()[0].Get("Loc").Arr()[0].RawData().String()
+		_ = jmb.Arr()[0].Get("U").Arr()[0].Get("Loc").Arr()[0]
 	}
 	// ars := jmb.Arr()[0].Get("U").Arr()[0].Get("Loc").Arr()[0].RawData().String()
 	// fmt.Println(ars)
