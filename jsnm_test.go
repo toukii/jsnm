@@ -86,6 +86,13 @@ func TestGet(t *testing.T) {
 
 }
 
+func TestPathGet(t *testing.T) {
+	path_get := jm.PathGet("Friends", "One", "Name").RawData().String()
+	assert(t, path_get, "One")
+	path_get = jm.PathGet("Friends", "One", "Name").RawData().String()
+	assert(t, path_get, "One")
+}
+
 func TestNCGet(t *testing.T) {
 	cur := jm.NCGet("Friends")
 
@@ -139,7 +146,7 @@ func TestArrJson(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println(string(bs))
+	// fmt.Println(string(bs))
 	jmb := BytesFmt(bs)
 	name := jmb.ArrLoc(0).Get("Name").RawData().String()
 	assert(t, name, "foo")
@@ -154,6 +161,33 @@ func TestGsj(t *testing.T) {
 	js, _ := gsj.NewJson(goutils.ReadFile("test.json"))
 	name := js.GetPath("Friends", "One", "Name").MustString()
 	assert(t, name, "One")
+}
+
+type U []*User
+type S struct {
+	U
+}
+
+func BenchmarkArr(b *testing.B) {
+	b.StopTimer()
+	// func TestBArr(b *testing.T) {
+	U := []*User{NewU("O", 1), NewU("T", 2)}
+	us := []S{S{U: U}, S{U: U}}
+	bs, _ := json.MarshalIndent(us, "\t", "\t")
+	fmt.Println(string(bs))
+	jmb := BytesFmt(bs)
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		_ = jmb.Arr()[0].Get("U").Arr()[0].Get("Loc").Arr()[0].RawData().String()
+	}
+	// ars := jmb.Arr()[0].Get("U").Arr()[0].Get("Loc").Arr()[0].RawData().String()
+	// fmt.Println(ars)
+}
+
+func BenchmarkPathGet(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = jm.PathGet("Friends", "One", "Name")
+	}
 }
 
 func BenchmarkGet(b *testing.B) {

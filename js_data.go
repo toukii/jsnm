@@ -1,34 +1,23 @@
 package jsnm
 
 type Jsnm struct {
-	raw   RawData
-	data  MapData
-	cache map[string]*Jsnm
+	raw_data interface{}
+	map_data MapData
+	arr_data []*Jsnm
+	cache    map[string]*Jsnm
 }
 
-func NewJsnm(m MapData) *Jsnm {
-	return &Jsnm{
-		raw:   RawData{raw: m},
-		data:  m,
-		cache: make(map[string]*Jsnm),
-	}
-}
-
-func NewRawJsnm(raw interface{}) *Jsnm {
-	return &Jsnm{
-		raw:   NewRawData(raw),
-		data:  nil,
-		cache: nil,
-	}
+func NewJsnm(raw interface{}) *Jsnm {
+	return &Jsnm{raw_data: raw}
 }
 
 func (j *Jsnm) RawData() *RawData {
 	if nil == j {
 		return nil
 	}
-	return &j.raw
+	return &RawData{raw: j.raw_data}
 }
 
 func (j *Jsnm) MapData() MapData {
-	return j.data
+	return j.map_data
 }

@@ -14,21 +14,62 @@ func (j *Jsnm) NCGet(path ...string) *Jsnm {
 		return j
 	}
 	// first step: get data from mapdata
-	cur, ok := j.data[path[0]]
+	if j.map_data == nil {
+		j.map_data = make(MapData)
+		if map_data, ok := j.raw_data.(map[string]interface{}); ok {
+			j.map_data = map_data
+		} else {
+			return nil
+		}
+	}
+	cur, ok := j.map_data[path[0]]
 	if !ok {
 		return nil
 	}
 	// second step: cache the data
-	var will_data *Jsnm
-	if v, ok := cur.(map[string]interface{}); ok {
-		will_data = NewJsnm(v)
-	} else {
-		will_data = NewRawJsnm(cur)
-	}
+	will_data := NewJsnm(cur)
 	if len(path) == 1 {
 		return will_data
 	}
 	return will_data.NCGet(path[1:]...)
+}
+
+// No Cache Get
+func (j *Jsnm) PathGet(path ...string) *Jsnm {
+	if j == nil || len(path) <= 0 {
+		return j
+	}
+	jm := j
+	var cache_jm *Jsnm
+	var exist bool
+	var sub_data interface{}
+	for _, subpath := range path {
+		if jm.cache == nil {
+			jm.cache = make(map[string]*Jsnm)
+		} else {
+			if cache_jm, exist = jm.cache[subpath]; exist {
+				// fmt.Println("*********cache data*********", subpath)
+				jm = cache_jm
+				continue
+			}
+		}
+		if jm.map_data == nil {
+			jm.map_data = make(MapData)
+			if map_data, ok := jm.raw_data.(map[string]interface{}); ok {
+				jm.map_data = map_data
+			} else {
+				return nil
+			}
+		}
+		sub_data, exist = jm.map_data[subpath]
+		if !exist {
+			return nil
+		}
+		sub_jm := NewJsnm(sub_data)
+		jm.cache[subpath] = sub_jm
+		jm = sub_jm
+	}
+	return jm
 }
 
 func (j *Jsnm) Get(path ...string) *Jsnm {
@@ -36,26 +77,33 @@ func (j *Jsnm) Get(path ...string) *Jsnm {
 		return j
 	}
 	// first step: get data from cache
-	if cache_data, ok := j.cache[path[0]]; ok {
-		// fmt.Printf("******cache %s*****\n", path)
-		if len(path) == 1 {
-			return cache_data
-		} else {
-			return cache_data.Get(path[1:]...)
+	if nil == j.cache {
+		j.cache = make(map[string]*Jsnm)
+	} else {
+		if cache_data, ok := j.cache[path[0]]; ok {
+			// fmt.Printf("******cache %s*****\n", path)
+			if len(path) == 1 {
+				return cache_data
+			} else {
+				return cache_data.Get(path[1:]...)
+			}
 		}
 	}
 	// second step: get data from mapdata
-	cur, ok := j.data[path[0]]
+	if j.map_data == nil {
+		j.map_data = make(MapData)
+		if map_data, ok := j.raw_data.(map[string]interface{}); ok {
+			j.map_data = map_data
+		} else {
+			return nil
+		}
+	}
+	cur, ok := j.map_data[path[0]]
 	if !ok {
 		return nil
 	}
 	// third step: cache the data
-	var will_cache_data *Jsnm
-	if v, ok := cur.(map[string]interface{}); ok {
-		will_cache_data = NewJsnm(v)
-	} else {
-		will_cache_data = NewRawJsnm(cur)
-	}
+	will_cache_data := NewJsnm(cur)
 	j.cache[path[0]] = will_cache_data
 	if len(path) == 1 {
 		return will_cache_data
@@ -67,18 +115,18 @@ func (j *Jsnm) Arr() []*Jsnm {
 	if j == nil {
 		return nil
 	}
-	arr, ok := (j.raw.raw).([]interface{})
+	if j.arr_data != nil {
+		return j.arr_data
+	}
+	arr, ok := (j.raw_data).([]interface{})
 	if !ok {
 		return nil
 	}
 	ret := make([]*Jsnm, 0, len(arr))
 	for _, vry := range arr {
-		if map_data, ok := vry.(map[string]interface{}); ok {
-			ret = append(ret, NewJsnm(map_data))
-		} else {
-			ret = append(ret, NewRawJsnm(vry))
-		}
+		ret = append(ret, NewJsnm(vry))
 	}
+	j.arr_data = ret
 	return ret
 }
 
@@ -86,17 +134,18 @@ func (j *Jsnm) ArrLoc(i int) *Jsnm {
 	if j == nil {
 		return nil
 	}
-	arr, ok := (j.raw.raw).([]interface{})
+	if nil != j.arr_data {
+		if i >= len(j.arr_data) {
+			return nil
+		}
+		return j.arr_data[i]
+	}
+	arr, ok := (j.raw_data).([]interface{})
 	if !ok {
 		return nil
 	}
 	if i >= len(arr) {
 		return nil
 	}
-	if map_data, ok := arr[i].(map[string]interface{}); ok {
-		return NewJsnm(map_data)
-	} else {
-		return NewRawJsnm(arr[i])
-	}
-	return nil
+	return NewJsnm(arr[i])
 }
