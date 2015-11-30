@@ -1,13 +1,5 @@
 package jsnm
 
-import (
-	"fmt"
-)
-
-func init() {
-	fmt.Println("main...")
-}
-
 // No Cache Get
 func (j *Jsnm) NCGet(path ...string) *Jsnm {
 	if j == nil || len(path) <= 0 {
@@ -48,7 +40,6 @@ func (j *Jsnm) PathGet(path ...string) *Jsnm {
 			jm.cache = make(map[string]*Jsnm)
 		} else {
 			if cache_jm, exist = jm.cache[subpath]; exist {
-				// fmt.Println("*********cache data*********", subpath)
 				jm = cache_jm
 				continue
 			}
@@ -81,7 +72,6 @@ func (j *Jsnm) Get(path ...string) *Jsnm {
 		j.cache = make(map[string]*Jsnm)
 	} else {
 		if cache_data, ok := j.cache[path[0]]; ok {
-			// fmt.Printf("******cache %s*****\n", path)
 			if len(path) == 1 {
 				return cache_data
 			} else {
