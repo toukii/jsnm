@@ -7,8 +7,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/shaalx/goutils"
-	gsj "github.com/shaalx/membership/pkg3/go-simplejson"
+	"github.com/toukii/goutils"
+	gsj "github.com/toukii/membership/pkg3/go-simplejson"
 )
 
 type User struct {

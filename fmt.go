@@ -2,7 +2,7 @@ package jsnm
 
 import (
 	"encoding/json"
-	"github.com/shaalx/goutils"
+	"github.com/toukii/goutils"
 	"io"
 	"os"
 )
