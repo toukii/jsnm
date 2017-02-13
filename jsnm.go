@@ -1,5 +1,12 @@
 package jsnm
 
+import (
+	"regexp"
+	"fmt"
+	"strconv"
+	"strings"
+)
+
 // No Cache Get
 func (j *Jsnm) NCGet(path ...string) *Jsnm {
 	if j == nil || len(path) <= 0 {
@@ -138,4 +145,27 @@ func (j *Jsnm) ArrLoc(i int) *Jsnm {
 		return nil
 	}
 	return NewJsnm(arr[i])
+}
+
+func (j *Jsnm) ArrGet(path ...string) *Jsnm{
+	if len(path)<=0 {
+		return j
+	}
+	fmt.Println(path)
+	if strings.HasSuffix(path[0],"\"") {
+		path_0:=strings.Trim(path[0],"\"")
+		return j.Get(path_0).ArrGet(path[1:]...)
+	}
+	if matched,err:=regexp.MatchString("\\d", path[0]); matched {
+		if err!=nil {
+			fmt.Println("path-0",err)
+		}
+		loc,err2:=strconv.ParseInt(path[0],10,64)
+		if err2 !=nil {
+			fmt.Println(err2)
+		}
+		return j.ArrLoc(int(loc)).ArrGet(path[1:]...)
+	}
+	return j.Get(path[0]).ArrGet(path[1:]...)
+
 }
