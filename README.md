@@ -158,6 +158,8 @@ fmt.Println(age)
 
 ##	Benchmark
 
+`go test -test.bench=".*"`
+
 ![Test][2]
 
  [1]: https://github.com/shaalx/jsnm "jsnm"
