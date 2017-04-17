@@ -3,12 +3,11 @@ package jsnm
 import (
 	"encoding/json"
 	"fmt"
+	gsj "github.com/bitly/go-simplejson"
+	"github.com/toukii/goutils"
 	"io/ioutil"
 	"reflect"
 	"testing"
-
-	"github.com/toukii/goutils"
-	gsj "github.com/toukii/membership/pkg3/go-simplejson"
 )
 
 type User struct {
@@ -34,6 +33,10 @@ func NewU(n string, a byte) *User {
 func Mock() {
 	u1 := NewU("One", 1)
 	u2 := NewU("Two", 2)
+	mp := make(map[string]interface{})
+	mp["objs"] = []*User{u1, u2}
+	bs, _ := json.MarshalIndent(mp, "\t", "\t")
+	_ = ioutil.WriteFile("test.json", bs, 0666)
 	u2.Friends["One"] = u1
 	u2.ToJ()
 }
