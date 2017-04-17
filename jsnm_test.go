@@ -158,6 +158,8 @@ func TestArrJson(t *testing.T) {
 	jmf := FileNameFmt("foo.json")
 	namef := jmf.ArrLoc(0).Get("Name").RawData().String()
 	assert(t, namef, "foo")
+	foo := jmf.ArrGet("0", "Name").RawData().String()
+	assert(t, foo, "foo1")
 }
 
 func TestGsj(t *testing.T) {

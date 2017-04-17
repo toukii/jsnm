@@ -8,6 +8,54 @@ __json mapping for map[string]interface{}__
 提供缓存的json解析器，初衷是提高重复解析json速度。
 
 
+## 用法
+
+1. 定义结构体如下：
+
+```go
+type User struct {
+	Name    string
+	Age     byte
+	Loc     []string
+}
+```
+
+2. 数据如下：
+
+```json
+[
+	{
+		"Name": "foo",
+		"Age": 10,
+		"Loc": [
+			"foo",
+			"foofoo"
+		]
+	},
+	{
+		"Name": "bar",
+		"Age": 12,
+		"Loc": [
+			"bar",
+			"barbar"
+		]
+	}
+]
+```
+
+3. 获得`foofoo`的方式：带有数组的，要用ArrGet，无数组形式可以用Get或PathGet;若不使用缓存，用NCGet,这样性能会很低。
+
+```
+js.ArrGet("0", "Loc", "1").RawData().String()
+```
+
+4. 获得`Name:foo`的方式：
+
+```
+js.ArrGet("0", "Name").RawData().String()
+```
+
+
 ##	数据结构设计
 
 ```go
