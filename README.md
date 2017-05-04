@@ -194,6 +194,35 @@ jm.Get("Loc").Arr[0].Get("Name")
 arr1 := jm.NCGet("Loc").ArrLoc(1).RawData().String()
 ```
 
+```
+// ArrGet
+func (j *Jsnm) ArrGet(path ...string) *Jsnm {
+	if len(path) <= 0 {
+		return j
+	}
+	if strings.HasSuffix(path[0], "\"") {
+		path_0 := strings.Trim(path[0], "\"")
+		return j.Get(path_0).ArrGet(path[1:]...)
+	}
+	if matched, err := regexp.MatchString("\\d", path[0]); matched {
+		if err != nil {
+			fmt.Println("path-0", err)
+		}
+		loc, err2 := strconv.ParseInt(path[0], 10, 64)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+		return j.ArrLoc(int(loc)).ArrGet(path[1:]...)
+	}
+	return j.Get(path[0]).ArrGet(path[1:]...)
+}
+```
+
+```go
+jm.ArrGet("Loc","0","Name")
+// 如果k刚好时数字，需要加上“”,如：jm.ArrGet(`"119012931"`,"0","Name")
+```
+
 **具体的类型转换，可在RawData中添加函数实现。**
 
 _Example_

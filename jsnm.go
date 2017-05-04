@@ -167,5 +167,4 @@ func (j *Jsnm) ArrGet(path ...string) *Jsnm {
 		return j.ArrLoc(int(loc)).ArrGet(path[1:]...)
 	}
 	return j.Get(path[0]).ArrGet(path[1:]...)
-
 }
