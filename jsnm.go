@@ -14,30 +14,23 @@ func (j *Jsnm) NCGet(path ...string) *Jsnm {
 		return j
 	}
 	// first step: get data from mapdata
-	//if j.map_data == nil {
-	//	j.map_data = make(MapData)
-	//	fmt.Println("make map_data")
 	map_data, ok := j.raw_data.(map[string]interface{});
 	if !ok {
-			//j.map_data = map_data
-			//fmt.Println("cache map_data")
-		//} else {
 		return nil
-		//}
 	}
 	cur, ok := map_data[path[0]]
 	if !ok {
 		return nil
 	}
 	// second step: cache the data
-	will_data := NewJsnm(cur)
+	subj := NewJsnm(cur)
 	if len(path) == 1 {
-		return will_data
+		return subj
 	}
-	return will_data.NCGet(path[1:]...)
+	return subj.NCGet(path[1:]...)
 }
 
-// No Cache Get
+// Cache PathGet
 func (j *Jsnm) PathGet(path ...string) *Jsnm {
 	if j == nil || len(path) <= 0 {
 		return j
@@ -77,6 +70,7 @@ func (j *Jsnm) PathGet(path ...string) *Jsnm {
 	return jm
 }
 
+// Cache Get
 func (j *Jsnm) Get(path string) *Jsnm {
 	if j==nil {
 		return nil
@@ -110,6 +104,7 @@ func (j *Jsnm) Get(path string) *Jsnm {
 	return will_cache_data
 }
 
+// Cache Arr
 func (j *Jsnm) Arr() []*Jsnm {
 	if j == nil {
 		return nil
@@ -130,7 +125,7 @@ func (j *Jsnm) Arr() []*Jsnm {
 	return ret
 }
 
-
+// Cache ArrLocs
 func (j *Jsnm) ArrLocs(locs ...int) *Jsnm {
 	if len(locs)<=0 {
 		return nil
@@ -146,7 +141,7 @@ func (j *Jsnm) ArrLocs(locs ...int) *Jsnm {
 	return subarr
 }
 
-
+// Cache ArrLoc i
 func (j *Jsnm) ArrLoc(i int) *Jsnm {
 	if j == nil {
 		return nil
@@ -164,16 +159,12 @@ func (j *Jsnm) ArrLoc(i int) *Jsnm {
 		return nil
 	}
 	arr_cache := make([]*Jsnm, len(arr))
-	//for _, vry := range arr {
-	//	arr_cache = append(arr_cache, NewJsnm(vry))
-	//}
 	//fmt.Println("cache arr_data")
 	j.arr_data = arr_cache
 	j.arr_data[i] = NewJsnm(arr[i])
 	if i >= len(arr) {
 		return nil
 	}
-	//return arr_cache[i]
 	return j.arr_data[i]
 }
 
@@ -181,7 +172,6 @@ func (j *Jsnm) ArrPath(path ...interface{}) *Jsnm {
 	if len(path) <= 0 {
 		return j
 	}
-	// fmt.Println(path)
 	switch reflect.TypeOf(path[0]).Kind() {
 	case reflect.String:
 		return j.Get(path[0].(string)).ArrPath(path[1:]...)
