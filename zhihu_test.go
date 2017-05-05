@@ -2,23 +2,24 @@ package jsnm
 
 import (
 	"net/http"
-	"testing"
+	"fmt"
 )
 
 // http://news-at.zhihu.com/api/3/news/hot
 
-func TestZhihu(t *testing.T) {
+func ExampleWriter() {
 	resp, err := http.Get("http://news-at.zhihu.com/api/3/news/hot")
 	if checkerr(err) {
-		t.Error(err)
+		fmt.Println(err)
+		return
 	}
 	jm := ReaderFmt(resp.Body)
 	// t.Log(jm.RawData())
 	arr := jm.Get("recent").Arr()
-	t.Logf("arr's length:%d\n", len(arr))
+	fmt.Printf("arr's length:%d\n", len(arr))
 	for i, it := range arr {
-		t.Log(i+1, it.Get("title").RawData().String())
-		t.Log(i+1, it.Get("url").RawData().String())
+		fmt.Println(i+1, it.Get("title").RawData().String())
+		fmt.Println(i+1, it.Get("url").RawData().String())
 	}
 }
 
