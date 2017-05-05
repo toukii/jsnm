@@ -215,7 +215,7 @@ func (j *Jsnm) ArrLocs(locs ...int) *Jsnm {
 	}
 	subarr:= j.ArrLoc(locs[0])
 	l:=len(locs)
-	for i := 1; i<l; i++ {
+	for i := 1; i < l; i++ {
 		if subarr==nil {
 			 return nil
 		}
@@ -280,6 +280,7 @@ fmt.Println(age)
 `go test -test.bench=".*"`
 
 ![Test][3]
+
 
  [1]: https://github.com/toukii/jsnm "jsnm"
  [2]: http://7xku3c.com1.z0.glb.clouddn.com/jsnm-benchmark.png "jsnm-bench"
