@@ -351,7 +351,7 @@ func Benchmark_003_Get_gsj(b *testing.B) {
 func Benchmark_004_Arr_jsnm(b *testing.B) {
 	//b.StopTimer()
 	//fmt.Println("Arr:",arrjm.Arr()[0].Arr()[0].Arr()[0].Arr()[0])
-	//fmt.Println("Arr:",arrjm.ArrLoc(0).ArrLoc(0).ArrLoc(0).ArrLoc(0))
+	//fmt.Println("Arr:",arrjm.ArrLoc(1).ArrLoc(0).ArrLoc(0).ArrLoc(0))
 	//fmt.Println("arrlocs:",arrjm.ArrLocs(0,0,0,0))
 	//b.StartTimer()
 	for i := 0; i < b.N; i++ {
@@ -401,3 +401,16 @@ func Benchmark_005_gsj(b *testing.B) {
 	}
 }
 
+func Benchmark_006_new_jsnm(b *testing.B) {
+
+	for i := 0; i < b.N; i++ {
+		_=&Jsnm{raw_data:bs}
+	}
+}
+
+func Benchmark_006_new_gsj(b *testing.B) {
+
+	for i := 0; i < b.N; i++ {
+		_,_=gsj.NewJson(bs)
+	}
+}

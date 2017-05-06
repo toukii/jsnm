@@ -147,24 +147,21 @@ func (j *Jsnm) ArrLoc(i int) *Jsnm {
 		return nil
 	}
 	if nil != j.arr_data {
-		if i >= len(j.arr_data) {
-			return nil
-		}
-		if j.arr_data[i] != nil {
+		//if i >= len(j.arr_data) {
+		//	return nil
+		//}
+		if j.arr_data[i] != nil && i < len(j.arr_data) {
 			return j.arr_data[i]
 		}
 	}
 	arr, ok := (j.raw_data).([]interface{})
-	if !ok {
+	if !ok || i >= len(arr) {
 		return nil
 	}
 	arr_cache := make([]*Jsnm, len(arr))
 	//fmt.Println("cache arr_data")
 	j.arr_data = arr_cache
 	j.arr_data[i] = NewJsnm(arr[i])
-	if i >= len(arr) {
-		return nil
-	}
 	return j.arr_data[i]
 }
 

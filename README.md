@@ -281,6 +281,7 @@ fmt.Println(age)
 
 ![Test][3]
 
+可以看到，数组的解析要落后一些，原因在于对参数的检测。如果激进一点，可以将不检查参数，速度将提高至少4倍。
 
  [1]: https://github.com/toukii/jsnm "jsnm"
  [2]: http://7xku3c.com1.z0.glb.clouddn.com/jsnm-benchmark.png "jsnm-bench"
