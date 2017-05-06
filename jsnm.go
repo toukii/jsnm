@@ -98,24 +98,17 @@ func (j *Jsnm) Get(path string) *Jsnm {
 		return nil
 	}
 	// third step: cache the data
-	will_cache_data := NewJsnm(cur)
 	//fmt.Println("##cache jsnm, path:",path)
-	j.cache[path] = will_cache_data
-	return will_cache_data
+	j.cache[path] = NewJsnm(cur)
+	return j.cache[path]
 }
 
 // Cache Arr
 func (j *Jsnm) Arr() []*Jsnm {
-	if j == nil {
-		return nil
-	}
 	if j.arr_data != nil {
 		return j.arr_data
 	}
-	arr, ok := (j.raw_data).([]interface{})
-	if !ok {
-		return nil
-	}
+	arr := (j.raw_data).([]interface{})
 	ret := make([]*Jsnm, 0, len(arr))
 	for _, vry := range arr {
 		ret = append(ret, NewJsnm(vry))
@@ -127,15 +120,9 @@ func (j *Jsnm) Arr() []*Jsnm {
 
 // Cache ArrLocs
 func (j *Jsnm) ArrLocs(locs ...int) *Jsnm {
-	if len(locs)<=0 {
-		return nil
-	}
 	subarr:= j.ArrLoc(locs[0])
 	l:=len(locs)
 	for i := 1; i<l; i++ {
-		if subarr==nil {
-			 return nil
-		}
 		subarr = subarr.ArrLoc(locs[i])
 	}
 	return subarr
@@ -143,21 +130,10 @@ func (j *Jsnm) ArrLocs(locs ...int) *Jsnm {
 
 // Cache ArrLoc i
 func (j *Jsnm) ArrLoc(i int) *Jsnm {
-	if j == nil {
-		return nil
+	if nil != j.arr_data && j.arr_data[i] != nil {
+		return j.arr_data[i]
 	}
-	if nil != j.arr_data {
-		//if i >= len(j.arr_data) {
-		//	return nil
-		//}
-		if j.arr_data[i] != nil && i < len(j.arr_data) {
-			return j.arr_data[i]
-		}
-	}
-	arr, ok := (j.raw_data).([]interface{})
-	if !ok || i >= len(arr) {
-		return nil
-	}
+	arr := (j.raw_data).([]interface{})
 	arr_cache := make([]*Jsnm, len(arr))
 	//fmt.Println("cache arr_data")
 	j.arr_data = arr_cache
@@ -166,14 +142,14 @@ func (j *Jsnm) ArrLoc(i int) *Jsnm {
 }
 
 func (j *Jsnm) ArrPath(path ...interface{}) *Jsnm {
-	if len(path) <= 0 {
+	if len(path) <=0 {
 		return j
 	}
 	switch reflect.TypeOf(path[0]).Kind() {
-	case reflect.String:
-		return j.Get(path[0].(string)).ArrPath(path[1:]...)
 	case reflect.Int:
 		return j.ArrLoc(path[0].(int)).ArrPath(path[1:]...)
+	default:
+		return j.Get(path[0].(string)).ArrPath(path[1:]...)
 	}
 	return nil
 }

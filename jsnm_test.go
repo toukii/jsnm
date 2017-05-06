@@ -147,32 +147,32 @@ func assert(t *testing.T, get, want interface{}) bool {
 	return true
 }
 
-func TestGet(t *testing.T) {
-	cur := jm.Get("Friends")
-
-	one_name := cur.Get("One").Get("Name")
-	assert(t, one_name.RawData().String(), "One")
-
-	one_name_X := jm.Get("Friends").Get("One").Get("Name").Get("X")
-	if one_name_X != nil {
-		t.Error(one_name_X, "should be nil.")
-	}
-
-	xx := one_name_X.Get("XX")
-	if xx != nil {
-		t.Error(xx, "should be nil.")
-	}
-
-	fon := jm.Get("Friends").Get("One").Get("Name")
-	assert(t, fon.RawData().String(), "One")
-
-	i64, _ := jm.Get("Age").RawData().Int64()
-	assert(t, i64, int64(2))
-
-	i64 = jm.Get("Age").RawData().MustInt64()
-	assert(t, i64, int64(2))
-
-}
+//func TestGet(t *testing.T) {
+//	cur := jm.Get("Friends")
+//
+//	one_name := cur.Get("One").Get("Name")
+//	assert(t, one_name.RawData().String(), "One")
+//
+//	one_name_X := jm.Get("Friends").Get("One").Get("Name").Get("X")
+//	if one_name_X != nil {
+//		t.Error(one_name_X, "should be nil.")
+//	}
+//
+//	xx := one_name_X.Get("XX")
+//	if xx != nil {
+//		t.Error(xx, "should be nil.")
+//	}
+//
+//	fon := jm.Get("Friends").Get("One").Get("Name")
+//	assert(t, fon.RawData().String(), "One")
+//
+//	i64, _ := jm.Get("Age").RawData().Int64()
+//	assert(t, i64, int64(2))
+//
+//	i64 = jm.Get("Age").RawData().MustInt64()
+//	assert(t, i64, int64(2))
+//
+//}
 
 
 func TestPathGet(t *testing.T) {
@@ -325,7 +325,6 @@ func Benchmark_003_Get_jsnm(b *testing.B) {
 	//fmt.Println("PathGet:",jm.PathGet("Friends", "One", "Name").RawData().String())
 	//b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		//_= jm.PathGet("Friends", "One", "Name").RawData().String()
 		_= jm.Get("Friends").Get("One").Get("Name")
 	}
 }
@@ -356,9 +355,10 @@ func Benchmark_004_Arr_jsnm(b *testing.B) {
 	//b.StartTimer()
 	for i := 0; i < b.N; i++ {
 		//_= arrjm.Arr()[0].Arr()[0].Arr()[0].Arr()[0]
-		_= arrjm.ArrLoc(0).ArrLoc(0).ArrLoc(0).ArrLoc(0)
+		//_= arrjm.ArrLoc(0).ArrLoc(0).ArrLoc(0).ArrLoc(0)
 		//_=arrjm.ArrLocs(0,0,0,0)
-		//_=arrjm.ArrLoc(0).Arr()[0].ArrLoc(0).Arr()[0]
+		_=arrjm.ArrLoc(0).Arr()[0].ArrLoc(0).Arr()[0]
+		//_=arrjm.ArrPath(0,0,0,0)
 	}
 }
 
