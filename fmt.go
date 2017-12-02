@@ -13,7 +13,7 @@ func BytesFmt(bs []byte) *Jsnm {
 	}
 	v := NewJsnm(nil)
 	err := json.Unmarshal(bs, &v.raw_data)
-	if goutils.CheckErr(err) {
+	if goutils.CheckNoLogErr(err) {
 		return nil
 	}
 	return v
@@ -22,7 +22,7 @@ func BytesFmt(bs []byte) *Jsnm {
 func ReaderFmt(r io.Reader) *Jsnm {
 	v := NewJsnm(nil)
 	err := json.NewDecoder(r).Decode(&v.raw_data)
-	if goutils.CheckErr(err) {
+	if goutils.CheckNoLogErr(err) {
 		return nil
 	}
 	return v
@@ -30,7 +30,7 @@ func ReaderFmt(r io.Reader) *Jsnm {
 
 func FileNameFmt(fn string) *Jsnm {
 	rf, err := os.OpenFile(fn, os.O_RDONLY, 0644)
-	if goutils.CheckErr(err) {
+	if goutils.CheckNoLogErr(err) {
 		return nil
 	}
 	return ReaderFmt(rf)
