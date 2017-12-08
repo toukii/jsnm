@@ -2,9 +2,11 @@ package jsnm
 
 import (
 	"encoding/json"
-	"github.com/toukii/goutils"
 	"io"
 	"os"
+
+	"github.com/everfore/exc"
+	"github.com/toukii/goutils"
 )
 
 func BytesFmt(bs []byte) *Jsnm {
@@ -34,4 +36,20 @@ func FileNameFmt(fn string) *Jsnm {
 		return nil
 	}
 	return ReaderFmt(rf)
+}
+
+func CmdFmt(cmd string) *Jsnm {
+	bs, err := exc.NewCMD(cmd).DoNoTime()
+	if goutils.CheckErr(err) {
+		return nil
+	}
+	return BytesFmt(bs)
+}
+
+func StructFmt(bs []byte, st interface{}) error {
+	err := json.Unmarshal(bs, st)
+	if goutils.CheckErr(err) {
+		return err
+	}
+	return nil
 }
