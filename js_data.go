@@ -19,5 +19,14 @@ func (j *Jsnm) RawData() *RawData {
 }
 
 func (j *Jsnm) MapData() MapData {
+	if j.map_data == nil {
+		j.map_data = make(MapData)
+		if map_data, ok := j.raw_data.(map[string]interface{}); ok {
+			j.map_data = map_data
+		} else {
+			return nil
+		}
+	}
+
 	return j.map_data
 }
