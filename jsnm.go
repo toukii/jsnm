@@ -2,10 +2,10 @@ package jsnm
 
 import (
 	"fmt"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
-	"reflect"
 )
 
 // No Cache Get
@@ -14,7 +14,7 @@ func (j *Jsnm) NCGet(path ...string) *Jsnm {
 		return j
 	}
 	// first step: get data from mapdata
-	map_data, ok := j.raw_data.(map[string]interface{});
+	map_data, ok := j.raw_data.(map[string]interface{})
 	if !ok {
 		return nil
 	}
@@ -72,7 +72,7 @@ func (j *Jsnm) PathGet(path ...string) *Jsnm {
 
 // Cache Get
 func (j *Jsnm) Get(path string) *Jsnm {
-	if j==nil {
+	if j == nil {
 		return nil
 	}
 	// first step: get data from cache
@@ -127,14 +127,14 @@ func (j *Jsnm) Arr() []*Jsnm {
 
 // Cache ArrLocs
 func (j *Jsnm) ArrLocs(locs ...int) *Jsnm {
-	if len(locs)<=0 {
+	if len(locs) <= 0 {
 		return nil
 	}
-	subarr:= j.ArrLoc(locs[0])
-	l:=len(locs)
-	for i := 1; i<l; i++ {
-		if subarr==nil {
-			 return nil
+	subarr := j.ArrLoc(locs[0])
+	l := len(locs)
+	for i := 1; i < l; i++ {
+		if subarr == nil {
+			return nil
 		}
 		subarr = subarr.ArrLoc(locs[i])
 	}

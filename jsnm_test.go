@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	//gsj "github.com/bitly/go-simplejson"
-	gsj "github.com/toukii/membership/pkg3/go-simplejson"
 	"github.com/toukii/goutils"
+	gsj "github.com/toukii/membership/pkg3/go-simplejson"
 	"io/ioutil"
 	"reflect"
 	"testing"
@@ -109,7 +109,7 @@ var (
 	}
 ]`)
 
-	arr_bs=[]byte(`[
+	arr_bs = []byte(`[
     [
         [
             [
@@ -119,10 +119,10 @@ var (
     ]
 ]`)
 
-	jm *Jsnm
+	jm    *Jsnm
 	jmGSJ *gsj.Json
 
-	arrjm *Jsnm
+	arrjm    *Jsnm
 	arrjmGSJ *gsj.Json
 )
 
@@ -130,10 +130,10 @@ func init() {
 	fmt.Println("test...")
 	Mock()
 	jm = FileNameFmt("test.json")
-	jmGSJ,_ = gsj.NewJson(goutils.ReadFile("test.json"))
+	jmGSJ, _ = gsj.NewJson(goutils.ReadFile("test.json"))
 
 	arrjm = BytesFmt(arr_bs)
-	arrjmGSJ,_ = gsj.NewJson(arr_bs)
+	arrjmGSJ, _ = gsj.NewJson(arr_bs)
 }
 
 func assert(t *testing.T, get, want interface{}) bool {
@@ -173,7 +173,6 @@ func TestGet(t *testing.T) {
 	assert(t, i64, int64(2))
 
 }
-
 
 func TestPathGet(t *testing.T) {
 	path_get := jm.PathGet("Friends", "One", "Name").RawData().String()
@@ -219,6 +218,16 @@ func TestArr(t *testing.T) {
 	assert(t, arr1, "TwoTwo")
 }
 
+func TestArrRange(t *testing.T) {
+	loc := jm.Get("Loc")
+	names := make([]string, 0, 10)
+	loc.Range(func(i int, ji *Jsnm) {
+		names = append(names, fmt.Sprintf("%d-%s", i, ji.RawData().String()))
+	})
+
+	assert(t, names, []string{"0-Two", "1-TwoTwo"})
+}
+
 func TestArr_NCGet(t *testing.T) {
 	arr := jm.NCGet("Loc").Arr()
 	name := arr[0].RawData().String()
@@ -259,7 +268,6 @@ type S struct {
 	U
 }
 
-
 func TestLongArr(t *testing.T) {
 	// // func TestBArr(b *testing.T) {
 	// U := []*User{NewU("O", 1), NewU("T", 2)}
@@ -270,19 +278,18 @@ func TestLongArr(t *testing.T) {
 	// rs := jmb.Arr()[0].Get("1").PathGet("Friends","foo","11")//.Arr()[0].Get("Loc").Arr()[0]
 	//rs := jmb.Arr()[0].Get("1").ArrLoc(0).Get("Friends").Get("foo").Get("11").Arr()[0].Get("Loc").Arr()[0]
 	//rs := jmb.ArrGet("0",`"1"`,"0","Friends","foo",`"11"`,"0","Loc","0")
-	rs := jmb.ArrPath(0,"1",0,"Friends","foo","11",0,"Loc",0).String()
+	rs := jmb.ArrPath(0, "1", 0, "Friends", "foo", "11", 0, "Loc", 0).String()
 	//()[0].Get("1").ArrLoc(0).Get("Friends").Get("foo").Get("11").Arr()[0].Get("Loc").Arr()[0]
-	assert(t,rs,"foo2")
+	assert(t, rs, "foo2")
 	// fmt.Println(ars)
 
-	jmb2,err := gsj.NewJson(bs)
-	if goutils.CheckErr(err){
+	jmb2, err := gsj.NewJson(bs)
+	if goutils.CheckErr(err) {
 		t.Error(err)
 	}
-	rs2 := jmb2.GetIndex(0).Get("1").GetIndex(0).GetPath("Friends","foo","11").GetIndex(0).Get("Loc").GetIndex(0).MustString()
-	assert(t,rs2,"foo2")
+	rs2 := jmb2.GetIndex(0).Get("1").GetIndex(0).GetPath("Friends", "foo", "11").GetIndex(0).Get("Loc").GetIndex(0).MustString()
+	assert(t, rs2, "foo2")
 }
-
 
 func Benchmark_001_short_Get_jsnm(b *testing.B) {
 	for i := 0; i < b.N; i++ {
@@ -326,7 +333,7 @@ func Benchmark_003_Get_jsnm(b *testing.B) {
 	//b.StartTimer()
 	for i := 0; i < b.N; i++ {
 		//_= jm.PathGet("Friends", "One", "Name").RawData().String()
-		_= jm.Get("Friends").Get("One").Get("Name")
+		_ = jm.Get("Friends").Get("One").Get("Name")
 	}
 }
 
@@ -335,7 +342,7 @@ func Benchmark_003_NCGet(b *testing.B) {
 	//fmt.Println("NCGET-:",jm.NCGet("Friends").NCGet("One").NCGet("Name").RawData().String())
 	//b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		_= jm.NCGet("Friends").NCGet("One").NCGet("Name")
+		_ = jm.NCGet("Friends").NCGet("One").NCGet("Name")
 	}
 }
 
@@ -344,7 +351,7 @@ func Benchmark_003_Get_gsj(b *testing.B) {
 	//fmt.Println("PathGet-gsj:",jmGSJ.GetPath("Friends", "One", "Name"))
 	//b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		_= jmGSJ.Get("Friends").Get("One").Get("Name")
+		_ = jmGSJ.Get("Friends").Get("One").Get("Name")
 	}
 }
 
@@ -356,7 +363,7 @@ func Benchmark_004_Arr_jsnm(b *testing.B) {
 	//b.StartTimer()
 	for i := 0; i < b.N; i++ {
 		//_= arrjm.Arr()[0].Arr()[0].Arr()[0].Arr()[0]
-		_= arrjm.ArrLoc(0).ArrLoc(0).ArrLoc(0).ArrLoc(0)
+		_ = arrjm.ArrLoc(0).ArrLoc(0).ArrLoc(0).ArrLoc(0)
 		//_=arrjm.ArrLocs(0,0,0,0)
 		//_=arrjm.ArrLoc(0).Arr()[0].ArrLoc(0).Arr()[0]
 	}
@@ -367,11 +374,9 @@ func Benchmark_004_Arr_gsj(b *testing.B) {
 	//fmt.Println("Arr-gsj:",arrjmGSJ.GetIndex(0).GetIndex(0).GetIndex(0).GetIndex(0))
 	//b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		_= arrjmGSJ.GetIndex(0).GetIndex(0).GetIndex(0).GetIndex(0)
+		_ = arrjmGSJ.GetIndex(0).GetIndex(0).GetIndex(0).GetIndex(0)
 	}
 }
-
-
 
 func Benchmark_005_jsnm(b *testing.B) {
 	b.StopTimer()
@@ -380,37 +385,36 @@ func Benchmark_005_jsnm(b *testing.B) {
 	//fmt.Println(rs)
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		_ = jmb.Arr()[0].Get("1").ArrLoc(0).PathGet("Friends","foo","11").Arr()[0].Get("Loc").Arr()[0]
+		_ = jmb.Arr()[0].Get("1").ArrLoc(0).PathGet("Friends", "foo", "11").Arr()[0].Get("Loc").Arr()[0]
 		//_=jmb.ArrGet("0",`"1"`,"0","Friends","foo",`"11"`,"0","Loc","0")
 		//_= jmb.ArrPath(0,"1",0,"Friends","foo","11",0,"Loc",0)
 	}
 }
 
-
 func Benchmark_005_gsj(b *testing.B) {
 	b.StopTimer()
-	jmb2,err := gsj.NewJson(bs)
-	if goutils.CheckErr(err){
+	jmb2, err := gsj.NewJson(bs)
+	if goutils.CheckErr(err) {
 		b.Error(err)
 	}
 	//rs := jmb2.GetIndex(0).Get("1").GetIndex(0).GetPath("Friends","foo","11").GetIndex(0).Get("Loc").GetIndex(0)
 	//fmt.Print(rs)
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		_ = jmb2.GetIndex(0).Get("1").GetIndex(0).GetPath("Friends","foo","11").GetIndex(0).Get("Loc").GetIndex(0)
+		_ = jmb2.GetIndex(0).Get("1").GetIndex(0).GetPath("Friends", "foo", "11").GetIndex(0).Get("Loc").GetIndex(0)
 	}
 }
 
 func Benchmark_006_new_jsnm(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
-		_=&Jsnm{raw_data:bs}
+		_ = &Jsnm{raw_data: bs}
 	}
 }
 
 func Benchmark_006_new_gsj(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
-		_,_=gsj.NewJson(bs)
+		_, _ = gsj.NewJson(bs)
 	}
 }
