@@ -13,6 +13,13 @@ func NewRawData(raw interface{}) RawData {
 	return RawData{raw: raw}
 }
 
+func (d *RawData) Raw() interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.raw
+}
+
 func (d *RawData) String() string {
 	if d == nil {
 		return ""
