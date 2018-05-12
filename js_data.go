@@ -30,3 +30,11 @@ func (j *Jsnm) MapData() MapData {
 
 	return j.map_data
 }
+
+func (j *Jsnm) MustFloat64() float64 {
+	return j.RawData().MustFloat64()
+}
+
+func (j *Jsnm) MustInt64() int64 {
+	return j.RawData().MustInt64()
+}

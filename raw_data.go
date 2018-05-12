@@ -39,6 +39,14 @@ func (d *RawData) MustInt64() int64 {
 	return i64
 }
 
+func (d *RawData) MustFloat64() float64 {
+	f, err := d.Float64()
+	if err != nil {
+		return 0.0
+	}
+	return f
+}
+
 func (d *RawData) Float64() (float64, error) {
 	return strconv.ParseFloat(d.String(), 0)
 }
