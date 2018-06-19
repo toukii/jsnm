@@ -221,8 +221,9 @@ func TestArr(t *testing.T) {
 func TestArrRange(t *testing.T) {
 	loc := jm.Get("Loc")
 	names := make([]string, 0, 10)
-	loc.Range(func(i int, ji *Jsnm) {
+	loc.Range(func(i int, ji *Jsnm) bool {
 		names = append(names, fmt.Sprintf("%d-%s", i, ji.RawData().String()))
+		return false
 	})
 
 	assert(t, names, []string{"0-Two", "1-TwoTwo"})

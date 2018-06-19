@@ -186,7 +186,10 @@ func (j *Jsnm) ArrGet(path ...string) *Jsnm {
 		return j.Get(path_0).ArrGet(path[1:]...)
 	}
 
-	i := path[0][0]
+	var i byte
+	if len(path[0]) > 0 {
+		i = path[0][0]
+	}
 	if i >= 48 && i <= 57 {
 		loc, err2 := strconv.ParseInt(path[0], 10, 64)
 		if err2 != nil {
