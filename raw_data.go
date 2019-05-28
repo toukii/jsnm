@@ -2,6 +2,7 @@ package jsnm
 
 import (
 	"fmt"
+	"reflect"
 	"strconv"
 )
 
@@ -49,4 +50,18 @@ func (d *RawData) MustFloat64() float64 {
 
 func (d *RawData) Float64() (float64, error) {
 	return strconv.ParseFloat(d.String(), 0)
+}
+
+func (d *RawData) Decode() string {
+	typ := reflect.TypeOf(d.raw)
+	switch typ.Kind() {
+	case reflect.String:
+		return d.String()
+	case reflect.Float64, reflect.Float32:
+		return strconv.FormatInt(int64(d.MustFloat64()), 10)
+	case reflect.Int8, reflect.Int16, reflect.Int, reflect.Int32, reflect.Int64:
+		return strconv.FormatInt(d.MustInt64(), 10)
+	default:
+		return d.String()
+	}
 }

@@ -292,6 +292,14 @@ func TestLongArr(t *testing.T) {
 	assert(t, rs2, "foo2")
 }
 
+func TestDecode(t *testing.T) {
+
+	js := FileNameFmt("test.json")
+	t.Log(js.PathGet("Friends", "One", "Name").RawData().Decode())
+	t.Log(js.PathGet("Friends", "One", "Age").RawData().Decode())
+
+}
+
 func Benchmark_001_short_Get_jsnm(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_ = jm.Get("Friends")

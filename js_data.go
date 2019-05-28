@@ -38,3 +38,7 @@ func (j *Jsnm) MustFloat64() float64 {
 func (j *Jsnm) MustInt64() int64 {
 	return j.RawData().MustInt64()
 }
+
+func (j *Jsnm) Decode() string {
+	return j.RawData().Decode()
+}
